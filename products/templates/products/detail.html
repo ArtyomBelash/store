@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-7">
+                        <img class="card-img" src="{{ product.image.url }}" alt="Product Image">
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">Цена: {{ product.price }} BYN</p>
+                            <form action="{% url 'basket_add' product.slug %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="id_quantity">Количество:</label>
+                                    {{ form.quantity }}
+                                </div>
+                                <button type="submit" class="btn btn-dark">Добавить в корзину</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h3>Комментарии</h3>
+                    {% for comment in comments %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-subtitle">{{ comment.author }}</h6>
+                            <p class="card-text">{{ comment.body }}</p>
+                            <p class="card-text" >{{ comment.created_on }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>Нет комментариев</p>
+                    {% endfor %}
+
+                    <hr>
+
+                    <h4>Добавить комментарий:</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ comment_form.body }}
+                        </div>
+                        <button type="submit" class="btn btn-success">Добавить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}

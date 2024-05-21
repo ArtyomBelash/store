@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+<title>Cпасибо</title>
+
+{% block content %}
+<div class="container" align="center">
+    <h1>Спасибо</h1>
+    <p> Ваш заказ успешно сформирован. Hомер заказа:
+        <strong>{{ order.id }}</strong>.</p>
+    <a href="{% url 'products'%}" class="btn btn-dark">Перейти в магазин</a>
+</div>
+{% endblock %}

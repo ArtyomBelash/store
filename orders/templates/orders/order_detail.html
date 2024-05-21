@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <form method="post" class="registration-form">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Данные заказа</legend>
+                    {% for item in basket %}
+                    <div class="form-group row">
+                        <div class="col-sm-8">
+                            {{ item.quantity }} x {{ item.product.name }}
+                            <span>{{ item.total_price }} BYN</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </fieldset>
+                <div class="form-group row">
+                    <div class="col-sm-8 offset-sm-4">
+                        <p>Сумма: {{ basket.get_total_price }} BYN</p>
+                    </div>
+                </div>
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Введите свои данные</legend>
+                    {% for field in form %}
+                    <div class="form-group row">
+                        <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            <div class="form-error">{{ field.errors }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </fieldset>
+                <div class="form-group row">
+                    <div class="col-sm-8 offset-sm-4">
+                        <input type="submit" class="btn btn-success" value="Заказать">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

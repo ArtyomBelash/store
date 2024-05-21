@@ -1,0 +1,107 @@
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин</title>
+    <script src="https://kit.fontawesome.com/db75d68d6d.js" crossorigin="anonymous"></script>
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Магазин</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'products' %}">Главная</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Категории</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'basket_detail' %}">Корзина <i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
+            </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Выйти ({{request.user.username}})
+                    <i class="fa-solid fa-user"></i> </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Войти <i class="fa-regular fa-user"></i></a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Контент страницы -->
+<div class="container">
+    {% block content %}
+    <h1>Добро пожаловать в наш магазин!</h1>
+
+    {% endblock %}
+</div>
+
+<!-- Подключение Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% if page_obj.has_other_pages %}
+    <div class="col-md-8 offset-md-2">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                {% if request.GET.search %}
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}">&laquo;</a>
+                {% else %}
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                {% endif %}
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
+            </li>
+            {% endif %}
+            {% for p in paginator.page_range %}
+            {% if page_obj.number == p %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ p }}</a>
+            </li>
+            {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+            <li class="page-item ">
+                {% if request.GET.search %}
+                <a class="page-link" href="?page={{ p }}&search={{ request.GET.search }}">{{ p }}</a>
+                {% else %}
+                <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                {% endif %}
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                {% if request.GET.search %}
+                <a class="page-link"
+                   href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}">&raquo;</a>
+                {% else %}
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+
+</body>

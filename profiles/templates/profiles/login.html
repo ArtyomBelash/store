@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <form method="post" enctype="multipart/form-data" class="registration-form">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Авторизация</legend>
+                    {% for field in form %}
+                    <div class="form-group row">
+                        <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            <div class="form-error">{{ field.errors }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </fieldset>
+                <div class="form-group row">
+                    <div class="col-sm-8 offset-sm-4">
+                        <button class="btn btn-primary" type="submit">Авторизоваться</button>
+                    </div>
+                </div>
+                <fieldset>
+
+                    <legend class="border-top mb-4">
+                        <small>
+                        Еще нет аккаунта? <a href="{% url 'registration' %}">Регистрация</a></small>
+                    </legend>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
