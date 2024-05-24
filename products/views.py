@@ -46,3 +46,13 @@ class ProductDetailView(DetailView, FormView):
 
     def get_success_url(self):
         return self.request.META.get('HTTP_REFERER', 'detail')
+
+
+class ProductsByCategoryListView(ListView):
+    model = Product
+    template_name = 'products/products_by_category.html'
+    context_object_name = 'products'
+    paginate_by = 3
+
+    def get_queryset(self):
+        return Product.objects.filter(category__slug=self.kwargs['slug'])
