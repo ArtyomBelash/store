@@ -1,7 +1,9 @@
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
+from .tasks import order_created
 from .forms import *
 from .models import *
 from basket.basket import Basket
@@ -28,6 +30,7 @@ class OrderCreateView(CreateView):
                                        price=i['price'],
                                        quantity=i['quantity'])
         basket.clear()
+        order_created.delay(order.pk)
         return render(self.request, 'orders/thanks.html', {'order': order})
 
     def get_context_data(self, **kwargs):

@@ -1,12 +1,16 @@
-from pathlib import Path
+import os
+import environ
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+root = environ.Path(__file__) - 2
+print(root)
+env = environ.Env()
+environ.Env.read_env(env.str(root(), '.env'))
+BASE_DIR = root()
 
-SECRET_KEY = 'django-insecure-+!(r7g%ptu-&ioc&=^z#$3@#e4a^-b!ijz%$fog#4j7c36^yk)'
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = env.str('SECRET_KEY')
+DEBUG = env.bool('DEBUG')
+ALLOWED_HOSTS = env.str('ALLOWED_HOSTS', default='').split(' ')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -70,7 +74,7 @@ WSGI_APPLICATION = 'store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -98,14 +102,20 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static/']
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'products'
 LOGOUT_REDIRECT_URL = 'products'
 
-
+EMAIL_HOST = env.str('EMAIL_HOST')
+EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
