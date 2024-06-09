@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
-<title>Cпасибо</title>
+<title>Ошибка операции</title>
 
 {% block content %}
 <div class="container" align="center">
-    <h1>Спасибо</h1>
-    <p> Ваш заказ успешно сформирован.</p>
-<!--        <strong>{{ order.id }}</strong>.</p>-->
+    <h1>Ошибка</h1>
+    <p> Произошла ошибка. Попробуйте еще раз</p>
     <a href="{% url 'products'%}" class="btn btn-dark">Перейти в магазин</a>
 </div>
 {% endblock %}
