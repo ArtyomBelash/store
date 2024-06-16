@@ -38,7 +38,7 @@ class OrderCreateView(CreateView):
                                        price=i['price'],
                                        quantity=i['quantity'])
         basket.clear()
-        order_created.delay(order.pk)
+        order_created.delay(order.id)
         self.request.session['order_id'] = order.id
         success_url = self.request.build_absolute_uri(reverse('completed'))
         cancel_url = self.request.build_absolute_uri(reverse('canceled'))
@@ -80,18 +80,9 @@ class OrderCreateView(CreateView):
             return self.form_invalid(form)
 
 
-# @csrf_exempt
-# def get_stripe_webhook(request):
-#     wb = stripe.WebhookEndpoint.create(
-#         enabled_events=["charge.succeeded", "charge.failed"],
-#         url="http://127.0.0.1:8000/order/webhook/",
-#     )
-#     return wb
-
 @csrf_exempt
 def stripe_webhook(request):
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    print(sig_header)
     event = None
     try:
         event = stripe.Webhook.construct_event(
@@ -113,6 +104,7 @@ def stripe_webhook(request):
             order.paid = True
             order.stripe_id = session.payment_intent
             order.save()
+            order_created.delay(order.id)
     return HttpResponse(status=200)
 
 

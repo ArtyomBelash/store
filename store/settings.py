@@ -29,6 +29,8 @@ INSTALLED_APPS += [
     'basket.apps.BasketConfig',
     'phonenumber_field',
     'debug_toolbar',
+    'celery',
+    'django_celery_results'
 ]
 
 AUTH_USER_MODEL = 'profiles.Profile'
@@ -114,6 +116,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'products'
 LOGOUT_REDIRECT_URL = 'products'
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'rpc://'
 
 EMAIL_HOST = env.str('EMAIL_HOST')
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
