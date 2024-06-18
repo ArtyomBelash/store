@@ -38,7 +38,6 @@ class OrderCreateView(CreateView):
                                        price=i['price'],
                                        quantity=i['quantity'])
         basket.clear()
-        order_created.delay(order.id)
         self.request.session['order_id'] = order.id
         success_url = self.request.build_absolute_uri(reverse('completed'))
         cancel_url = self.request.build_absolute_uri(reverse('canceled'))
@@ -90,9 +89,9 @@ def stripe_webhook(request):
             sig_header=sig_header,
             secret=endpoint_secret
         )
-    except ValueError as e:
+    except ValueError:
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError:
         return HttpResponse(status=400)
     if event.type == 'checkout.session.completed':
         session = event.data.object
