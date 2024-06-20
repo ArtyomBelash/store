@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from store import settings
+from tinymce import models as tinymce_models
 
 
 def upload_to(instance, filename):
@@ -9,7 +10,7 @@ def upload_to(instance, filename):
 
 class Product(models.Model):
     name = models.CharField(max_length=120, verbose_name='Название')
-    description = models.TextField(verbose_name='Описание')
+    description = tinymce_models.HTMLField(verbose_name='Описание')
     short_description = models.CharField(max_length=255, verbose_name='Краткое описание"', blank=True, null=True)
     slug = models.SlugField(verbose_name='Url', unique=True, db_index=True)
     image = models.ImageField(upload_to=upload_to, verbose_name='Фото', blank=True)

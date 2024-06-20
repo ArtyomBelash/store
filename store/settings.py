@@ -1,9 +1,7 @@
 import os
 import environ
 
-# BASE_DIR = Path(__file__).resolve().parent.parent
 root = environ.Path(__file__) - 2
-print(root)
 env = environ.Env()
 environ.Env.read_env(env.str(root(), '.env'))
 BASE_DIR = root()
@@ -30,7 +28,8 @@ INSTALLED_APPS += [
     'phonenumber_field',
     'debug_toolbar',
     'celery',
-    'django_celery_results'
+    'django_celery_results',
+    'tinymce',
 ]
 
 AUTH_USER_MODEL = 'profiles.Profile'

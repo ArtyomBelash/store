@@ -13,7 +13,7 @@
                     <div class="col-md-5">
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">{{ product.description|safe }}</p>
                             <p class="card-text">Цена: {{ product.price }} BYN</p>
                             <form action="{% url 'basket_add' product.slug %}" method="post">
                                 {% csrf_token %}

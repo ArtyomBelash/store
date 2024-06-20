@@ -10,6 +10,7 @@ urlpatterns = [
     path('account/', include('profiles.urls')),
     path('basket/', include('basket.urls')),
     path('order/', include('orders.urls')),
+    path('tinymce/', include('tinymce.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
 
