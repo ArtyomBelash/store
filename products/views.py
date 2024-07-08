@@ -7,6 +7,7 @@ from profiles.models import Profile
 from .models import Product, Comment
 from .forms import CommentForm
 from basket.forms import BasketAddProductForm
+from django.core.cache import cache
 
 
 class ProductListView(ListView):
@@ -16,6 +17,13 @@ class ProductListView(ListView):
     paginate_by = 3
     ordering = 'name'
 
+    def get_queryset(self):
+        products = cache.get('all_products')
+        if not products:
+            products = Product.objects.all()
+            cache.set('all_products', products)
+        return products
+
 
 class ProductDetailView(DetailView, FormView):
     form_class = BasketAddProductForm
@@ -24,6 +32,13 @@ class ProductDetailView(DetailView, FormView):
     context_object_name = 'product'
     template_name = 'products/detail.html'
     comment_form = CommentForm
+
+    def get_object(self, queryset=None):
+        product_detail = cache.get(f'product_detail_{self.kwargs["slug"]}')
+        if not product_detail:
+            product_detail = Product.objects.get(slug=self.kwargs['slug'])
+            cache.set(f'product_detail_{self.kwargs["slug"]}', product_detail)
+        return product_detail
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,4 +72,8 @@ class ProductsByCategoryListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return Product.objects.filter(category__slug=self.kwargs['slug'])
+        products = cache.get('products_by_category')
+        if not products:
+            products = Product.objects.filter(category__slug=self.kwargs['slug'])
+            cache.set('products_by_category', products)
+        return products

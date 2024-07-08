@@ -30,6 +30,7 @@ INSTALLED_APPS += [
     'celery',
     'django_celery_results',
     'tinymce',
+    'redisboard',
 ]
 
 AUTH_USER_MODEL = 'profiles.Profile'
@@ -129,3 +130,10 @@ STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
 STRIPE_API_VERSION = env.str('STRIPE_API_VERSION')
 STRIPE_WEBHOOK_SECRET = 'whsec_83309a02699a6b861ebde80db5a74455cbbbd6bee86d54c30beeee82ba3deb39'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}
