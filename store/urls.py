@@ -11,6 +11,7 @@ urlpatterns = [
     path('basket/', include('basket.urls')),
     path('order/', include('orders.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('api/v1/', include('api.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
 
