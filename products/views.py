@@ -1,9 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView
 
-from profiles.models import Profile
 from .models import Product, Comment
 from .forms import CommentForm
 from basket.forms import BasketAddProductForm
