@@ -72,8 +72,8 @@ class ProductsByCategoryListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        products = cache.get('products_by_category')
+        products = cache.get(f'{self.kwargs["slug"]}_products_by_category')
         if not products:
             products = Product.objects.filter(category__slug=self.kwargs['slug'])
-            cache.set('products_by_category', products)
+            cache.set(f'{self.kwargs["slug"]}_products_by_category', products)
         return products
