@@ -8,9 +8,14 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.short_description }}</p>
-                        <p class="card-text">Price: {{ product.price }}</p>
-                        <p class="card-text">Quantity: {{ product.quantity }}</p>
-                        <p class="card-text">Last Updated: {{ product.updated }}</p>
+                        <p class="card-text"><strong>Цена:</strong> {{ product.price }}</p>
+                        <p class="card-text">
+                            <strong>Категория:</strong>
+                            <a href="{{ product.category.get_absolute_url }}" class="card-link">
+                                {{ product.category }}
+                            </a>
+                        </p>
+                        <p class="card-text"><strong>Oбновлен:</strong> {{ product.updated }}</p>
                     </div>
                 </div>
             </a>

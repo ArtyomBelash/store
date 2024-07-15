@@ -14,12 +14,11 @@ class ProductListView(ListView):
     template_name = 'products/index.html'
     context_object_name = 'products'
     paginate_by = 3
-    ordering = 'name'
 
     def get_queryset(self):
         products = cache.get('all_products')
         if not products:
-            products = Product.objects.all()
+            products = Product.objects.all().select_related('category').order_by('-updated')
             cache.set('all_products', products)
         return products
 
@@ -73,7 +72,8 @@ class ProductsByCategoryListView(ListView):
     def get_queryset(self):
         products = cache.get(f'{self.kwargs["slug"]}_products_by_category')
         if not products:
-            products = Product.objects.filter(category__slug=self.kwargs['slug'])
+            products = Product.objects.select_related('category').filter(category__slug=self.kwargs['slug']).order_by(
+                'name')
             cache.set(f'{self.kwargs["slug"]}_products_by_category', products)
         return products
 
@@ -85,4 +85,5 @@ class PopularProductsListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by('-total_quantity')
+        return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by(
+            '-total_quantity').select_related('category')

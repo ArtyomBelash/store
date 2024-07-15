@@ -15,7 +15,7 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Магазин</a>
+    <a class="navbar-brand" href="#">TeaShop</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -33,6 +33,9 @@
                     <a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                     {% endfor %}
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'popular_products' %}">Популярное</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'basket_detail' %}">Корзина <i
