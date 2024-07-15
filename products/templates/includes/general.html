@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4">
+            <a href="{% url 'detail' product.slug %}" class="product-link">
+                <div class="card">
+                    <img class="card-img-top card-img-top-custom" src="{{ product.image.url }}" alt="Product Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.short_description }}</p>
+                        <p class="card-text">Price: {{ product.price }}</p>
+                        <p class="card-text">Quantity: {{ product.quantity }}</p>
+                        <p class="card-text">Last Updated: {{ product.updated }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br>

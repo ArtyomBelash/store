@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView
 
@@ -75,3 +76,13 @@ class ProductsByCategoryListView(ListView):
             products = Product.objects.filter(category__slug=self.kwargs['slug'])
             cache.set(f'{self.kwargs["slug"]}_products_by_category', products)
         return products
+
+
+class PopularProductsListView(ListView):
+    model = Product
+    template_name = 'products/popular_products.html'
+    context_object_name = 'products'
+    paginate_by = 3
+
+    def get_queryset(self):
+        return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by('-total_quantity')
