@@ -1,20 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<br>
 <div class="container">
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <div class="card">
-                <div class="row no-gutters">
+            <div class="product-details">
+                <div class="row">
                     <div class="col-md-7">
-                        <img class="card-img" src="{{ product.image.url }}" alt="Product Image">
+                        <img class="product-image" src="{{ product.image.url }}" alt="Product Image">
                     </div>
                     <div class="col-md-5">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.description|safe }}</p>
-                            <p class="card-text">Цена: {{ product.price }} BYN</p>
+                        <div class="product-info">
+                            <h2 class="product-title">{{ product.name }}</h2>
+                            <p class="product-price">Цена: <span class="price">{{ product.price }} BYN</span></p>
                             <form action="{% url 'basket_add' product.slug %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -26,37 +24,34 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card mt-2">
-                <div class="card-body">
-                    <h3>Комментарии</h3>
-                    {% for comment in comments %}
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <h6 class="card-subtitle">{{ comment.author }}</h6>
-                            <p class="card-text">{{ comment.body }}</p>
-                            <p class="card-text" >{{ comment.created_on }}</p>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="product-description">{{ product.description|safe }}</p>
                     </div>
-                    {% empty %}
-                    <p>Нет комментариев</p>
-                    {% endfor %}
-
-                    <hr>
-
-                    <h4>Добавить комментарий:</h4>
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {{ comment_form.body }}
-                        </div>
-                        <button type="submit" class="btn btn-success">Добавить</button>
-                    </form>
                 </div>
+            </div>
+            <div class="comments-section">
+                <h3 class="comments-title">Отзывы</h3>
+                {% for comment in comments %}
+                <div class="comment-card">
+                    <h6 class="comment-author">{{ comment.author }}</h6>
+                    <p class="comment-body">{{ comment.body }}</p>
+                    <p class="comment-date">{{ comment.created_on }}</p>
+                </div>
+                {% empty %}
+                <p class="no-comments">Пока никто не оставил отзыв</p>
+                {% endfor %}
+                <hr>
+                <h4 class="add-comment-title">Оставить отзыв:</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ comment_form.body }}
+                    </div>
+                    <button type="submit" class="btn btn-success">Отправить</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<br>
 {% endblock %}
