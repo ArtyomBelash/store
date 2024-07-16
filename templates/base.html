@@ -6,16 +6,14 @@
     <script src="https://kit.fontawesome.com/db75d68d6d.js" crossorigin="anonymous"></script>
     <!-- Подключение Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <!-- Подключение CSS -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 <!-- Навигационное меню -->
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">TeaShop</a>
+    <a class="navbar-brand">TeaShop</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -51,6 +49,13 @@
                 <a class="nav-link" href="{% url 'login' %}">Войти <i class="fa-regular fa-user"></i></a>
             </li>
             {% endif %}
+            <li class="nav-item">
+                <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'search_products' %}">
+                    <input type="text" class="form-control mr-sm-1" id="search" name="search" placeholder="Поиск"
+                           style="height: 35px;">
+                    <button type="submit" class="btn btn-dark btn-sm">Найти</button>
+                </form>
+            </li>
         </ul>
     </div>
 </nav>
@@ -58,8 +63,7 @@
 <!-- Контент страницы -->
 <div class="container">
     {% block content %}
-    <h1>Добро пожаловать в наш магазин!</h1>
-
+    <h1 align="center">Добро пожаловать в наш магазин!</h1>
     {% endblock %}
 </div>
 

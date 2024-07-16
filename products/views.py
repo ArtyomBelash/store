@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView
 
@@ -87,3 +88,17 @@ class PopularProductsListView(ListView):
     def get_queryset(self):
         return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by(
             '-total_quantity').select_related('category')
+
+
+class SearchProductsListView(ListView):
+    model = Product
+    template_name = 'products/search_products.html'
+    context_object_name = 'products'
+    paginate_by = 3
+
+    def get(self, request, *args, **kwargs):
+        search_query = self.request.GET.get('search')
+        if search_query:
+            self.queryset = Product.objects.filter(name__icontains=search_query)
+            return super().get(request, *args, **kwargs)
+        return redirect('products')

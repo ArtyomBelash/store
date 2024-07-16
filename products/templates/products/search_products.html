@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if products %}
+<br>
+{% include 'includes/general.html' %}
+{% else %}
+<br>
+<h1 align="center">Извините, поиск не дал результатов.</h1>
+{% endif %}
+{% endblock %}
