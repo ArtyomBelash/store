@@ -1,7 +1,7 @@
-.body {
-  background-image: url('../media/background/background_2.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+body {
+    background-image: url('../../media/background/background_2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .page-item.active .page-link {
