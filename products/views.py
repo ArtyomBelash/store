@@ -2,19 +2,17 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, FormView
-
-from .models import Product, Comment
-from .forms import CommentForm
-from basket.forms import BasketAddProductForm
+from django.views.generic import DetailView, FormView
 from django.core.cache import cache
 
+from basket.forms import BasketAddProductForm
+from .mixins import CommonProductListViewMixin
+from .models import Product, Comment
+from .forms import CommentForm
 
-class ProductListView(ListView):
-    model = Product
+
+class ProductListView(CommonProductListViewMixin):
     template_name = 'products/index.html'
-    context_object_name = 'products'
-    paginate_by = 3
 
     def get_queryset(self):
         products = cache.get('all_products')
@@ -42,7 +40,6 @@ class ProductDetailView(DetailView, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = self.comment_form()
-        # context['comments'] = self.get_object().comments.order_by('-created_on').select_related()
         context['comments'] = Comment.objects.filter(product__slug=self.kwargs['slug']).order_by(
             '-created_on').select_related('author')
         return context
@@ -64,11 +61,8 @@ class ProductDetailView(DetailView, FormView):
         return self.request.META.get('HTTP_REFERER', 'detail')
 
 
-class ProductsByCategoryListView(ListView):
-    model = Product
+class ProductsByCategoryListView(CommonProductListViewMixin):
     template_name = 'products/products_by_category.html'
-    context_object_name = 'products'
-    paginate_by = 3
 
     def get_queryset(self):
         products = cache.get(f'{self.kwargs["slug"]}_products_by_category')
@@ -79,22 +73,16 @@ class ProductsByCategoryListView(ListView):
         return products
 
 
-class PopularProductsListView(ListView):
-    model = Product
+class PopularProductsListView(CommonProductListViewMixin):
     template_name = 'products/popular_products.html'
-    context_object_name = 'products'
-    paginate_by = 3
 
     def get_queryset(self):
         return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by(
             '-total_quantity').select_related('category')
 
 
-class SearchProductsListView(ListView):
-    model = Product
+class SearchProductsListView(CommonProductListViewMixin):
     template_name = 'products/search_products.html'
-    context_object_name = 'products'
-    paginate_by = 3
 
     def get(self, request, *args, **kwargs):
         search_query = self.request.GET.get('search')

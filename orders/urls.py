@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import *
+from .webhooks import stripe_webhook
+from . import views
 
 urlpatterns = [
-    path('create/', OrderCreateView.as_view(), name='get_order'),
-    path('completed/', payment_completed, name='completed'),
-    path('canceled/', payment_canceled, name='canceled'),
+    path('create/', views.OrderCreateView.as_view(), name='get_order'),
+    path('completed/', views.payment_completed, name='completed'),
+    path('canceled/', views.payment_canceled, name='canceled'),
     path('webhook/', stripe_webhook, name='webhook'),
 ]

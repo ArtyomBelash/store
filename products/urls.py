@@ -1,10 +1,10 @@
-from django.urls import path, include
-from .views import *
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('', ProductListView.as_view(), name='products'),
-    path('popular', PopularProductsListView.as_view(), name='popular_products'),
-    path('search', SearchProductsListView.as_view(), name='search_products'),
-    path('product/<slug:slug>', ProductDetailView.as_view(), name='detail'),
-    path('category/<slug:slug>', ProductsByCategoryListView.as_view(), name='category'),
+    path('', views.ProductListView.as_view(), name='products'),
+    path('popular', views.PopularProductsListView.as_view(), name='popular_products'),
+    path('search', views.SearchProductsListView.as_view(), name='search_products'),
+    path('product/<slug:slug>', views.ProductDetailView.as_view(), name='detail'),
+    path('category/<slug:slug>', views.ProductsByCategoryListView.as_view(), name='category'),
 ]
