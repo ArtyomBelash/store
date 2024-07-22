@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 
 from .services import create_order, create_stripe_session
 from .forms import OrderForm
@@ -34,9 +34,9 @@ class OrderCreateView(CreateView):
             return self.form_invalid(form)
 
 
-def payment_completed(request):
-    return render(request, 'orders/thanks.html')
+class PaymentCompeted(TemplateView):
+    template_name = 'orders/thanks.html'
 
 
-def payment_canceled(request):
-    return render(request, 'orders/canceled.html')
+class PaymentCanceled(TemplateView):
+    template_name = 'orders/canceled.html'

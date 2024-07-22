@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('create/', views.OrderCreateView.as_view(), name='get_order'),
-    path('completed/', views.payment_completed, name='completed'),
-    path('canceled/', views.payment_canceled, name='canceled'),
+    path('completed/', views.PaymentCompeted.as_view(), name='completed'),
+    path('canceled/', views.PaymentCanceled.as_view(), name='canceled'),
     path('webhook/', stripe_webhook, name='webhook'),
 ]
