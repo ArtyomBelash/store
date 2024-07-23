@@ -9,6 +9,7 @@ from basket.forms import BasketAddProductForm
 from .mixins import CommonProductListViewMixin
 from .models import Product, Comment
 from .forms import CommentForm
+from .product_services import add_comment_to_product
 
 
 class ProductListView(CommonProductListViewMixin):
@@ -49,13 +50,9 @@ class ProductDetailView(DetailView, FormView):
         obj = self.get_object()
         comment_form = self.comment_form(request.POST)
         if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.product = obj
-            comment.author = self.request.user
-            comment.save()
+            add_comment_to_product(self.request.user, comment_form, obj)
             return self.form_valid(comment_form)
-        else:
-            return self.form_invalid(comment_form)
+        return self.form_invalid(comment_form)
 
     def get_success_url(self):
         return self.request.META.get('HTTP_REFERER', 'detail')

@@ -9,7 +9,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 
 
-def create_order(request, form):
+def create_order(request, form) -> Order:
     basket = Basket(request)
     new_order = Order.objects.create(
         name=form.cleaned_data.get('name'),
