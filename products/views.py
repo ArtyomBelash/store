@@ -3,24 +3,20 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView
-from django.core.cache import cache
 
 from basket.forms import BasketAddProductForm
 from .mixins import CommonProductListViewMixin
 from .models import Product, Comment
 from .forms import CommentForm
-from .product_services import add_comment_to_product
+from .product_services import add_comment_to_product, get_cashed_products
 
 
 class ProductListView(CommonProductListViewMixin):
     template_name = 'products/index.html'
 
     def get_queryset(self):
-        products = cache.get('all_products')
-        if not products:
-            products = Product.objects.all().select_related('category').order_by('-updated')
-            cache.set('all_products', products)
-        return products
+        products = Product.objects.all().select_related('category').order_by('-updated')
+        return get_cashed_products('all_products', products)
 
 
 class ProductDetailView(DetailView, FormView):
@@ -32,11 +28,8 @@ class ProductDetailView(DetailView, FormView):
     comment_form = CommentForm
 
     def get_object(self, queryset=None):
-        product_detail = cache.get(f'product_detail_{self.kwargs["slug"]}')
-        if not product_detail:
-            product_detail = Product.objects.get(slug=self.kwargs['slug'])
-            cache.set(f'product_detail_{self.kwargs["slug"]}', product_detail)
-        return product_detail
+        product = Product.objects.get(slug=self.kwargs['slug'])
+        return get_cashed_products(f'product_detail_{self.kwargs["slug"]}', product)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,20 +55,18 @@ class ProductsByCategoryListView(CommonProductListViewMixin):
     template_name = 'products/products_by_category.html'
 
     def get_queryset(self):
-        products = cache.get(f'{self.kwargs["slug"]}_products_by_category')
-        if not products:
-            products = Product.objects.select_related('category').filter(category__slug=self.kwargs['slug']).order_by(
-                'name')
-            cache.set(f'{self.kwargs["slug"]}_products_by_category', products)
-        return products
+        products = Product.objects.select_related('category').filter(category__slug=self.kwargs['slug']).order_by(
+            'name')
+        return get_cashed_products(f'{self.kwargs["slug"]}_products_by_category', products)
 
 
 class PopularProductsListView(CommonProductListViewMixin):
     template_name = 'products/popular_products.html'
 
     def get_queryset(self):
-        return Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by(
+        products = Product.objects.annotate(total_quantity=Count('order_items__quantity')).order_by(
             '-total_quantity').select_related('category')
+        return get_cashed_products('popular_products', products)
 
 
 class SearchProductsListView(CommonProductListViewMixin):
