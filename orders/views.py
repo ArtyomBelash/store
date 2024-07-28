@@ -7,6 +7,7 @@ from .forms import OrderForm
 from .models import Order
 from basket.basket import Basket
 
+
 class OrderCreateView(CreateView):
     form_class = OrderForm
     model = Order
