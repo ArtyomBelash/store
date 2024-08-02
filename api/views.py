@@ -1,6 +1,9 @@
 from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
+
 from products.models import Product, Category
-from api.serializers import ProductSerializer, CategorySerializer
+from api.serializers import ProductSerializer, CategorySerializer, ProfileSerializer
+from profiles.models import Profile
 from .permissions import IsAdminOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,8 +12,8 @@ from rest_framework.response import Response
 class ProductsViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'pk'
+    pagination_class = LimitOffsetPagination
 
     @action(methods=['get'], detail=False)
     def categories(self, request):
@@ -30,3 +33,8 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         products = Product.objects.filter(category=category)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
