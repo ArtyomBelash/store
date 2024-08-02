@@ -124,6 +124,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'products'
 LOGOUT_REDIRECT_URL = 'products'
 
+AUTHENTICATION_BACKENDS = [
+    'profiles.backends.CustomAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_RESULT_BACKEND = 'rpc://'
 
