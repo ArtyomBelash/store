@@ -25,6 +25,7 @@ INSTALLED_APPS += [
     'profiles.apps.ProfilesConfig',
     'orders.apps.OrdersConfig',
     'basket.apps.BasketConfig',
+    # libs
     'phonenumber_field',
     'debug_toolbar',
     'celery',
@@ -32,6 +33,7 @@ INSTALLED_APPS += [
     'tinymce',
     'redisboard',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 AUTH_USER_MODEL = 'profiles.Profile'
@@ -154,6 +156,11 @@ CACHES = {
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'api.permissions.IsAdminOrReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 3,

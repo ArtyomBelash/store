@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 from rest_framework import routers
+from rest_framework.authtoken import views as rest_views
 
 router = routers.SimpleRouter()
 router.register(r'products', views.ProductsViewSet)
@@ -9,5 +10,6 @@ router.register(r'profile', views.ProfileViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', rest_views.obtain_auth_token)
 ]
