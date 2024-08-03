@@ -6,7 +6,7 @@ from profiles.models import Profile
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'slug']
+        fields = ['name', 'slug', 'description']
 
 
 class ProductSerializer(serializers.ModelSerializer):
