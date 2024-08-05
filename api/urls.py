@@ -7,7 +7,8 @@ router = routers.SimpleRouter()
 router.register(r'products', views.ProductsViewSet)
 router.register(r'category', views.CategoriesViewSet)
 router.register(r'profile', views.ProfileViewSet)
-
+router.register(r'orders', views.OrderViewSet)
+router.register(r'item_in_order', views.ItemViewSet)
 urlpatterns = [
     path('', views.ApiRoot.as_view()),
     path('', include(router.urls)),

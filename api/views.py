@@ -1,11 +1,14 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 
+from api.utils import get_permissions_for_orders_and_item_in_order
+from orders.models import Order, ItemInOrder
 from products.models import Product, Category
-from api.serializers import ProductSerializer, CategorySerializer, ProfileSerializer
+from api.serializers import ProductSerializer, CategorySerializer, ProfileSerializer, OrderSerializer, \
+    ItemInOrderSerializer
 from profiles.models import Profile
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -20,7 +23,9 @@ class ApiRoot(APIView):
         return Response({
             'products': reverse('product-list', request=request),
             'category': reverse('category-list', request=request),
-            'profile': reverse('profile-list', request=request)
+            'profile': reverse('profile-list', request=request),
+            'orders': reverse('order-list', request=request),
+            'item_in_order': reverse('iteminorder-list', request=request),
         })
 
 
@@ -55,9 +60,26 @@ class CategoriesViewSet(viewsets.ModelViewSet):
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 
     @method_decorator(cache_page(60 * 60), name='profile_list_cache')
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+
+    def get_permissions(self):
+        return get_permissions_for_orders_and_item_in_order(self.action)
+
+
+class ItemViewSet(viewsets.ModelViewSet):
+    serializer_class = ItemInOrderSerializer
+    queryset = ItemInOrder.objects.all()
+
+    def get_permissions(self):
+        return get_permissions_for_orders_and_item_in_order(self.action)
