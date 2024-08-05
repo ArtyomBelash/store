@@ -15,7 +15,8 @@ from rest_framework.reverse import reverse
 class ApiRoot(APIView):
     http_method_names = ['get']
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         return Response({
             'products': reverse('product-list', request=request),
             'category': reverse('category-list', request=request),
@@ -60,5 +61,3 @@ class ProfileViewSet(viewsets.ModelViewSet):
     @method_decorator(cache_page(60 * 60), name='profile_list_cache')
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-
-
