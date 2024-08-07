@@ -7,4 +7,3 @@ def get_permissions_for_orders_and_item_in_order(action):
     else:
         permission_classes = [permissions.IsAdminUser]
     return [permission() for permission in permission_classes]
-

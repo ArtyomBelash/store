@@ -1,0 +1,41 @@
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    container_name: rabbitmq
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    container_name: redis
+
+  celery:
+    build: .
+    command: celery -A store worker -l info
+    depends_on:
+      - rabbitmq
+
+  stripe:
+    image: stripe/stripe-cli
+    command: listen --forward-to http://web:8000/order/webhook/
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_API_VERSION=${STRIPE_API_VERSION}
+    depends_on:
+      - web
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - rabbitmq
+      - redis
+      - celery

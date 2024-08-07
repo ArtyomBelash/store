@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 
-from .models import Product, Comment
+from .models import Comment
 from .forms import CommentForm
 from profiles.models import Profile
 from django.core.cache import cache

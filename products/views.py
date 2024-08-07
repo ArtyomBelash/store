@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, FormView
 
 from basket.forms import BasketAddProductForm
+from profiles.models import Profile
 from .mixins import CommonProductListViewMixin
 from .models import Product, Comment
 from .forms import CommentForm
@@ -41,9 +42,10 @@ class ProductDetailView(DetailView, FormView):
     @method_decorator(login_required(login_url='login'))
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
+        profile = Profile.objects.get(id=request.user.id)
         comment_form = self.comment_form(request.POST)
         if comment_form.is_valid():
-            add_comment_to_product(self.request.user, comment_form, obj)
+            add_comment_to_product(profile, comment_form, obj)
             return self.form_valid(comment_form)
         return self.form_invalid(comment_form)
 
